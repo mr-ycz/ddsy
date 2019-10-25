@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ycz.dao.GoodsTypeMapper">
+
+    <resultMap id="goodstype" type="GoodsType">
+        <!-- 定义主键列 -->
+        <id property="id" column="id"/>
+        <!-- 定义其他列 -->
+        <result property="gtpicture" column="gtpicture"/>
+        <result property="gtname" column="gtname"/>
+        <collection property="goods" ofType="Goods" javaType="list">
+            <!-- 定义主键列 -->
+            <id property="id" column="tid"/>
+            <result property="name" column="name"/>
+            <result property="picture" column="picture"/>
+            <result property="price" column="price"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectAllGoodsType" resultType="com.ycz.pojo.GoodsType">
+        select * from t_goodstype
+    </select>
+
+    <select id="selectGoodsTypeById" resultMap="goodstype">
+        select DISTINCT t_goodstype.id,t_goodstype.gtname,t_goodstype.gtpicture,
+        t_goods.id tid,t_goods.name,t_goods.picture,t_goods.price
+         from t_goodstype
+        inner join t_goods on t_goods.typeid=t_goodstype.id
+        where t_goodstype.id=#{id} order by t_goods.times limit 0,4
+    </select>
+    <select id="selectAllGoodsTypeById" resultMap="goodstype">
+        select DISTINCT t_goodstype.id,t_goodstype.gtname,t_goodstype.gtpicture,
+        t_goods.id tid,t_goods.name,t_goods.picture,t_goods.price
+         from t_goodstype
+        inner join t_goods on t_goods.typeid=t_goodstype.id
+        where t_goodstype.id=#{id} order by t_goods.times
+    </select>
+</mapper>

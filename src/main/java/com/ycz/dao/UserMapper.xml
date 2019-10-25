@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+  dtd:docuemtn type definition  为当前提供约束
+     ：标签   属性   层级    顺序
+  Mapper文件，映射文件，替换DAO实现类
+-->
+<mapper namespace="com.ycz.dao.UserMapper">
+    <!--<cache type="com.ycz.cache.MybatisRedisCache"/>-->
+
+    <insert id="insertUser">
+        insert into t_user(username,password,email,salt,times)
+        values(#{username},#{password},#{email},#{salt},#{times})
+    </insert>
+
+    <select id="queryAllUsers" resultType="com.ycz.pojo.User">
+        select * from t_user
+    </select>
+    <select id="queryUserByUsername" resultType="com.ycz.pojo.User">
+        select * from t_user
+        <where>
+            <if test="username!=null and username!=''">
+                username=#{username}
+            </if>
+            <if test="username!=null and username!=''">
+               or email=#{username}
+            </if>
+        </where>
+    </select>
+    <select id="queryUserByEmail" resultType="com.ycz.pojo.User">
+        select * from t_user where email=#{email}
+    </select>
+
+
+</mapper>
