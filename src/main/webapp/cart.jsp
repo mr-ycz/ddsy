@@ -58,6 +58,39 @@ pageEncoding="utf-8"%>
 			    return;
 			}
         }
+        
+        function tocheck(id,gid) {
+			if (id!=-1){
+                if(!$(".checknum").checked){
+                    $("#allcheck").prop("checked",false); // 子复选框某个不选择，全选也被取消
+                }
+                var choicelength=$("input[type='checkbox'][class='checknum']").length;
+                var choiceselect=$("input[type='checkbox'][class='checknum']:checked").length;
+
+                if(choicelength==choiceselect){
+                    $("#allcheck").prop("checked",true);
+                }
+
+                if ($("#check"+id).prop('checked')) {
+                    $.post("${pageContext.request.contextPath}/cart/opcart","gid="+gid+"&uid=${userid}&op=1&allfee="+$("#total").html()+"&number="+$("#show_count").html(),function(data){
+                        $("#show_count").html(${allGoodsNum});
+                        $("#total").html(data);
+                    })
+				}else {
+                    $.post("${pageContext.request.contextPath}/cart/opcart","gid="+gid+"&uid=${userid}&op=2&allfee="+$("#total").html()+"&number="+$("#show_count").html(),function(data){
+                        $("#show_count").html(${allGoodsNum});
+                        $("#total").html(data);
+                    })
+				}
+
+			}else {
+                var allcheck=document.getElementById("allcheck");
+                var choice=document.getElementsByName("check");
+                for(var i=0;i<choice.length;i++){
+                    choice[i].checked=allcheck.checked;
+                }
+			}
+        }
 	</script>
 	<div class="header_con">
 		<div class="header">
@@ -118,7 +151,7 @@ pageEncoding="utf-8"%>
 
 	<c:forEach items="${carts}" var="ct" varStatus="i">
 		<ul class="cart_list_td clearfix">
-			<li class="col01"><input type="checkbox" name="check" checked></li>
+			<li class="col01"><input type="checkbox" id="check${i.count}" class="checknum" onclick="tocheck(${i.count},${ct.goods.id})" name="check" checked="checked"></li>
 			<li class="col02"><img src="${pageContext.request.contextPath}/images/${ct.goods.picture}"></li>
 			<li class="col03">${ct.goods.name}<br><em>${ct.goods.price}元/500g</em></li>
 			<li class="col04">500g</li>
@@ -136,7 +169,7 @@ pageEncoding="utf-8"%>
 	</c:forEach>
 
 	<ul class="settlements">
-		<li class="col01"><input type="checkbox" name="" checked=""></li>
+		<li class="col01"><input type="checkbox" id="allcheck" onclick="tocheck(-1)" name="allcheck" checked="checked"></li>
 		<li class="col02">全选</li>
 		<li class="col03">合计(不含运费)：<span>¥</span><em id="total">${cartfee}</em><br>共计<b id="show_count"></b>件商品</li>
 		<li class="col04"><a href="place_order.jsp">去结算</a></li>

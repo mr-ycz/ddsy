@@ -76,4 +76,25 @@ public class CartController {
         getcart(request, uid);
         return "cart";
     }
+
+    @RequestMapping("/opcart")
+    @ResponseBody
+    public BigDecimal opcart(Integer gid, Integer uid, String op, String allfee, Integer number, HttpServletRequest request){
+        //op为1是选中,op为2是取消
+        List<Cart> carts = cartService.queryCartByUid(uid);
+        Cart cart = cartService.queryCartByGid(gid);
+        BigDecimal money=new BigDecimal(allfee);
+
+        if (op.equals("1")){
+            money=money.add(cart.getMoney());
+            number+=1;
+        }else {
+            money=money.add(cart.getMoney().multiply(new BigDecimal(-1)));
+            number-=1;
+        }
+
+        request.getSession().setAttribute("allGoodsNum", number);
+
+        return money;
+    }
 }

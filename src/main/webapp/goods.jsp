@@ -7,7 +7,7 @@
 
 <div class="list_model">
     <div class="list_title clearfix">
-        <h3 class="fl" id="model01">${goodsTypes2.gtname}</h3>
+        <h3 class="fl" id="model0${goodsTypes2.id}">${goodsTypes2.gtname}</h3>
         <div class="subtitle fl">
             <span>|</span>
             <a href="#">鲜芒</a>
